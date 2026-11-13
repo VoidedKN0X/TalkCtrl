@@ -4,6 +4,22 @@ What changed in each TalkCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## v0.1.1 (2026-11-13)
+
+A security and maintenance release. Nothing changes in how you use TalkCtrl.
+
+### Security
+
+- **Firmware transfer:** an unusual request from the unit during an update (asking to skip a huge amount of data) can no longer derail the transfer; TalkCtrl keeps sending from the right place in the file.
+- **Firmware files you load are limited to 64 MB**, like downloads from Cardo's server, so picking a huge file by mistake can't fill the phone's storage.
+- **Temporary firmware copies are cleaned up:** a failed or cancelled download leaves nothing behind, the copy is removed after a successful update, and leftovers are removed the next time TalkCtrl starts.
+- The firmware transfer only ever reads TalkCtrl's own temporary copy of the file.
+- The build tool download is now checked against its published checksum.
+
+### Performance
+
+- Updated Jetpack Compose, AndroidX and Kotlin libraries to their current versions.
+- Release builds drop debug logging.
 ## v0.1.0 (2026-11-12)
 
 The first release of TalkCtrl: a private app for Cardo motorcycle intercoms (Packtalk, Freecom X, Spirit), without a Cardo account. **Not yet tested on a real unit**; features that couldn't be confirmed from the Cardo app's code are shown greyed out as "Needs confirming on your unit".

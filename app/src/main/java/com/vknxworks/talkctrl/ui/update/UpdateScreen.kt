@@ -123,8 +123,9 @@ fun UpdateScreen() {
             val raw = File(context.cacheDir, "firmware-picked")
             val ok = withContext(Dispatchers.IO) {
                 try {
-                    context.contentResolver.openInputStream(uri)?.use { input -> raw.outputStream().use { input.copyTo(it) } } != null
+                    context.contentResolver.openInputStream(uri)?.use { input -> raw.outputStream().use { FirmwareFile.copyCapped(input, it) } } != null
                 } catch (_: Exception) {
+                    raw.delete()
                     false
                 }
             }

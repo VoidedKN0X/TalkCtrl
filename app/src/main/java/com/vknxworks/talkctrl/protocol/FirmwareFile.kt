@@ -10,7 +10,24 @@ import java.util.zip.GZIPInputStream
  * archive and sends that (`SettingsUpdatingFWViewModel.extractTarGZ`). `.bin` and `.fot` files are sent as they are.
  */
 object FirmwareFile {
-    private const val MAX = 64 * 1024 * 1024
+    /** Largest firmware file TalkCtrl reads (Cardo's images are a few MB). */
+    const val MAX = 64 * 1024 * 1024
+
+    /** The temporary copies TalkCtrl makes in its cache folder while preparing an update. */
+    val TEMP_NAMES = listOf("firmware-picked", "firmware-download.bin", "firmware-download.bin.part", "firmware-ver.bin")
+
+    /** Copies a picked file, refusing anything over [MAX] instead of filling the phone's storage. */
+    fun copyCapped(input: java.io.InputStream, out: java.io.OutputStream): Long {
+        val buf = ByteArray(64 * 1024)
+        var total = 0L
+        while (true) {
+            val n = input.read(buf)
+            if (n < 0) return total
+            total += n
+            if (total > MAX) throw IOException("too big")
+            out.write(buf, 0, n)
+        }
+    }
 
     fun isTarGz(name: String) = name.lowercase().endsWith(".tar.gz") || name.lowercase().endsWith(".tgz")
 

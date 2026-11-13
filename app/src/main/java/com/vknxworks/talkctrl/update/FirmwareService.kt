@@ -15,6 +15,7 @@ import com.vknxworks.talkctrl.MainActivity
 import com.vknxworks.talkctrl.R
 import com.vknxworks.talkctrl.bt.GaiaGatt
 import com.vknxworks.talkctrl.container
+import com.vknxworks.talkctrl.protocol.FirmwareFile
 import com.vknxworks.talkctrl.protocol.Gaia
 import com.vknxworks.talkctrl.protocol.GaiaDialect
 import com.vknxworks.talkctrl.protocol.UpgradeEngine
@@ -85,6 +86,11 @@ class FirmwareService : Service() {
     }
 
     private fun begin(addr: String, file: File, dialect: GaiaDialect) {
+        // Only TalkCtrl's own firmware copies in its cache folder are ever read here.
+        if (file.parentFile?.canonicalPath != cacheDir.canonicalPath || file.name !in FirmwareFile.TEMP_NAMES) {
+            _state.value = TransferState(running = true)
+            return finish(Ending.FILE)
+        }
         address = addr
         reconnects = 0
         _state.value = TransferState(running = true, phase = UpgradeEngine.Phase.CONNECTING)
@@ -193,6 +199,9 @@ class FirmwareService : Service() {
             engine = null
         }, 1000)
         _state.update { it.copy(running = false, end = end, code = code, waitingForUnit = false) }
+        // The unit has the new firmware: the temporary copy isn't needed any more. (After a failure it's
+        // kept, so you can try again; it's removed the next time TalkCtrl starts.)
+        if (end == Ending.COMPLETE) container.appScope.launch(Dispatchers.IO) { container.clearFirmwareCopies() }
         scope.launch {
             stopForeground(STOP_FOREGROUND_REMOVE)
             val text = getString(if (end == Ending.COMPLETE) R.string.upd_done_notif else R.string.upd_stopped_notif)

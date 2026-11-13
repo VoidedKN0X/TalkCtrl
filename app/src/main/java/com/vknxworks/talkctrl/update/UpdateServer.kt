@@ -75,22 +75,29 @@ object UpdateServer {
             val total = c.contentLengthLong
             if (total > MAX_FIRMWARE) throw RefusedException("too big")
             val tmp = File(dest.path + ".part")
-            c.inputStream.use { input ->
-                tmp.outputStream().use { out ->
-                    val buf = ByteArray(16 * 1024)
-                    var done = 0L
-                    while (true) {
-                        coroutineContext.ensureActive()
-                        val n = input.read(buf)
-                        if (n < 0) break
-                        done += n
-                        if (done > MAX_FIRMWARE) throw RefusedException("too big")
-                        out.write(buf, 0, n)
-                        progress(done, total)
+            // A failed or cancelled download leaves nothing behind.
+            var complete = false
+            try {
+                c.inputStream.use { input ->
+                    tmp.outputStream().use { out ->
+                        val buf = ByteArray(16 * 1024)
+                        var done = 0L
+                        while (true) {
+                            coroutineContext.ensureActive()
+                            val n = input.read(buf)
+                            if (n < 0) break
+                            done += n
+                            if (done > MAX_FIRMWARE) throw RefusedException("too big")
+                            out.write(buf, 0, n)
+                            progress(done, total)
+                        }
                     }
                 }
+                if (!tmp.renameTo(dest)) throw IOException("rename")
+                complete = true
+            } finally {
+                if (!complete) tmp.delete()
             }
-            if (!tmp.renameTo(dest)) throw IOException("rename")
         } finally {
             c.disconnect()
         }

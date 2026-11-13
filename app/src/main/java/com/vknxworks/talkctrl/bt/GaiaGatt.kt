@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothGattCharacteristic
 import android.bluetooth.BluetoothGattDescriptor
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
+import android.bluetooth.BluetoothStatusCodes
 import android.content.Context
 import com.vknxworks.talkctrl.protocol.Caip
 import com.vknxworks.talkctrl.protocol.Gaia
@@ -68,7 +69,7 @@ class GaiaGatt(private val context: Context, private val listener: Listener) {
             writing = true
         }
         val ok = try {
-            g.writeCharacteristic(c, next, BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT) == BluetoothGatt.GATT_SUCCESS
+            g.writeCharacteristic(c, next, BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT) == BluetoothStatusCodes.SUCCESS
         } catch (_: SecurityException) {
             false
         }
@@ -132,7 +133,7 @@ class GaiaGatt(private val context: Context, private val listener: Listener) {
             try {
                 g.setCharacteristicNotification(rsp, true)
                 val d = rsp.getDescriptor(Caip.CCCD)
-                if (d == null || g.writeDescriptor(d, BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE) != BluetoothGatt.GATT_SUCCESS) {
+                if (d == null || g.writeDescriptor(d, BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE) != BluetoothStatusCodes.SUCCESS) {
                     listener.onReady(mtu)
                 }
             } catch (_: SecurityException) {

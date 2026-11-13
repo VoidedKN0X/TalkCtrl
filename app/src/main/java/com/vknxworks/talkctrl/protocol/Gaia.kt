@@ -371,7 +371,8 @@ class UpgradeEngine(private val file: ByteArray, private val io: Io, chunk: Int,
                 if (c.size != 8) return fail(Reason.PROTOCOL)
                 val wanted = c.int32(0)
                 val skip = c.int32(4)
-                if (skip > 0 && offset + skip < file.size) offset += skip
+                // Long arithmetic: a huge skip from the unit must not wrap the offset around.
+                if (skip > 0 && offset.toLong() + skip < file.size) offset += skip
                 val left = file.size - offset
                 remaining = if (wanted in 1 until left) wanted else left
                 setPhase(Phase.TRANSFERRING)

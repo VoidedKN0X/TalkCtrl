@@ -7,6 +7,7 @@ import com.vknxworks.talkctrl.bt.UnitLink
 import com.vknxworks.talkctrl.data.lock.LockVault
 import com.vknxworks.talkctrl.data.settings.AppSettings
 import com.vknxworks.talkctrl.data.settings.SettingsRepository
+import com.vknxworks.talkctrl.protocol.FirmwareFile
 import com.vknxworks.talkctrl.ui.common.hasPermission
 import com.vknxworks.talkctrl.ui.lock.AppLock
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -36,6 +37,13 @@ class AppContainer(val context: Context) {
 
     init {
         AppLock.onLocked = { onLocked() }
+        // Firmware copies left in the cache by an earlier run (no transfer survives the app's process).
+        appScope.launch(Dispatchers.IO) { clearFirmwareCopies() }
+    }
+
+    /** Deletes TalkCtrl's temporary firmware copies. Only while no transfer is running. */
+    fun clearFirmwareCopies() {
+        FirmwareFile.TEMP_NAMES.forEach { runCatching { java.io.File(context.cacheDir, it).delete() } }
     }
 
     val canUseBluetooth get() = context.hasPermission(Manifest.permission.BLUETOOTH_CONNECT)
