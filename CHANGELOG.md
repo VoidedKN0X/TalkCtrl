@@ -4,6 +4,12 @@ What changed in each TalkCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## Project updates (2026-11-19)
+
+### Project
+
+- **The weekly code scan builds again.** The scan on 17 November stopped before compiling anything: the build checks every download against the checksums in `gradle/verification-metadata.xml`, and six small build-description files (the parent files of Guava, JUnit and the Kotlin coroutines and serialization libraries) were missing from that list. They are only fetched when nothing is cached, which is why earlier builds passed. Their checksums, taken from a fresh run of the dependency verification workflow, are now in the list; nothing was removed and verification is as strict as before. No app changes, so no new version.
+
 ## v0.1.1 (2026-11-13)
 
 A security and maintenance release. Nothing changes in how you use TalkCtrl.
