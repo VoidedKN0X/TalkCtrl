@@ -4,6 +4,19 @@ What changed in each TalkCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## Unreleased
+
+Changes that are in the code but not in a release yet. They ship with the next version. None of this was run on a phone or on a Cardo unit: the change was checked by reading the code and by the CI build only.
+
+### Privacy
+
+- **The app is hidden from screenshots from its very first frame when it opens locked.** The "not in screenshots or screen recordings" protection was switched on a moment after the first frame was drawn, so the very first frame of the lock screen was not covered. It is now set before anything is drawn when the app lock is on (and when "Hide in screenshots" is already known to be on). Nothing changes while the app is open.
+
+### Not changed
+
+- TalkCtrl has no home-screen widgets and no Quick Settings tiles, so there was nothing to remove.
+- Nothing in the Bluetooth code, the protocol or the firmware update was touched.
+
 ## Project updates (2026-11-19)
 
 ### Project
