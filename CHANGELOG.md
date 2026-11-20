@@ -4,9 +4,9 @@ What changed in each TalkCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
-## Unreleased
+## v0.1.2 (2026-11-20)
 
-Changes that are in the code but not in a release yet. They ship with the next version. None of this was run on a phone or on a Cardo unit: the change was checked by reading the code and by the CI build only.
+Built and checked by CI only: nothing in this release had been run on a phone when it was published. It has also never been tried with a real Cardo unit.
 
 ### Privacy
 
