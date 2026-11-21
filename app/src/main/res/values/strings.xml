@@ -286,4 +286,26 @@
     <string name="upd_stopped_notif">The firmware update stopped</string>
     <string name="ch_update">Firmware update</string>
     <string name="ch_update_desc">Shows while TalkCtrl sends firmware to your unit, with Abort</string>
+
+    <!-- Profiles and settings file -->
+    <string name="group_backup">Profiles and settings file</string>
+    <string name="backup_footer">Only on the phone and in the file you choose. The file never holds your unit\'s address, name or serial number, or the app lock\'s PIN. An import never turns off Hide in screenshots or Hide in recent apps and doesn\'t change the app lock. Profiles are stored in TalkCtrl; nothing is sent to the unit until you apply one.</string>
+    <string name="export_profiles">Export profiles</string>
+    <string name="export_profiles_sub">Save Solo, Duo and Group in a file</string>
+    <string name="export_settings">Export settings</string>
+    <string name="export_settings_sub">Save TalkCtrl\'s settings and FM station names in a file</string>
+    <string name="import_file">Import profiles or settings</string>
+    <string name="import_file_sub">From a file TalkCtrl exported</string>
+    <string name="file_saved">File saved</string>
+    <string name="file_save_failed">Couldn\'t save the file</string>
+    <string name="file_invalid">This isn\'t a TalkCtrl profiles or settings file, or it comes from a newer version.</string>
+    <string name="file_same">Everything already matches this file.</string>
+    <string name="import_title">Replace these?</string>
+    <string name="import_body">These will be replaced by what is in the file:\n\n%1$s</string>
+    <string name="import_replace">Replace</string>
+    <string name="imported">Imported</string>
+    <string name="import_profile_new">Profile %1$s (new)</string>
+    <string name="import_profile_replaced">Profile %1$s</string>
+    <string name="import_model">Model for firmware updates</string>
+    <string name="import_fm_names">FM station names</string>
 </resources>

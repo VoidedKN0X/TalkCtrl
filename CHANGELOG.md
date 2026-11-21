@@ -10,6 +10,7 @@ Changes on `main` that aren't in a release yet. They ship with the next version.
 
 ### New
 
+- **Export and import profiles and settings.** Settings → Profiles and settings file. *Export profiles* saves your Solo, Duo and Group profiles in a small JSON file; *Export settings* saves TalkCtrl's own settings (classic Bluetooth fallback, the model picked for firmware updates, the app lock's "lock again" time, Hide in screenshots / Hide in recent apps) and your FM station names. *Import profiles or settings* reads either kind of file, lists exactly what would be replaced, and changes nothing until you tap Replace. The files never hold your unit's Bluetooth address, its name or serial number, or the app lock's PIN or keys. Imported profiles are only stored in TalkCtrl: nothing is sent to the unit until you apply a profile, as before, and a profile that isn't a valid USER_CONFIG + VOLUMES record is skipped. An import can turn Hide in screenshots and Hide in recent apps on but never off, and never changes whether the app lock is on. Not yet tried on a phone.
 - **Names for FM presets.** The pencil next to a preset on the Radio tab now also takes a name ("Studio Brussel", "Radio 2"). The preset then shows under that name, and the Radio card shows the name of the station you are listening to when it has one. Names are kept on the phone only, the unit has no place for them, and belong to the frequency: a name follows the station, not the preset number. Changing only the name sends nothing to the unit. Not yet tried with a real Cardo unit.
 
 ## v0.1.3 (2026-11-21)

@@ -22,7 +22,8 @@ Part of the [Ctrl series](#the-ctrl-series) by VKNXWorks.
 - **Microphone:** VOX sensitivity and noise gate
 - **FM radio:** on/off, tune to a frequency, seek, scan, auto tune, six presets (play and edit, with your own station names kept on the phone), region and RDS
 - **Intercom:** mesh groups (create, join, add riders, stop, mute, bridge to Bluetooth intercom, delete), Bluetooth intercom channels A/B/C (pair, call, end, conference, reset riders), speed dial number and call
-- **Profiles:** save the unit's volumes and settings as Solo, Duo and Group and switch with one tap
+- **Profiles:** save the unit's volumes and settings as Solo, Duo and Group and switch with one tap; export them to a file and import them again (on this or another phone)
+- **Settings file:** export TalkCtrl's settings and FM station names and import them, after seeing what will be replaced. Never includes your unit's address, name or serial number or the app lock's PIN
 - **Factory reset**, with a confirmation
 - **Firmware update:** check Cardo's update server for your model, read what's new, download, or load a `.bin`, `.fot` or `.tar.gz` file yourself. Installed with Qualcomm's standard GAIA upgrade, with progress, Abort and resume. TalkCtrl refuses firmware that isn't newer than the unit's and needs at least 50 % battery
 - **App lock** with its own PIN and optional fingerprint unlock, and **Hide in screenshots** / **Hide in recent apps** (all off until you turn them on)
