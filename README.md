@@ -30,7 +30,7 @@ Part of the [Ctrl series](#the-ctrl-series) by VKNXWorks.
 - **Factory reset**, with a confirmation
 - **Firmware update:** check Cardo's update server for your model, read what's new, download, or load a `.bin`, `.fot` or `.tar.gz` file yourself. Installed with Qualcomm's standard GAIA upgrade, with progress, Abort and resume. TalkCtrl refuses firmware that isn't newer than the unit's and needs at least 50 % battery
 - **App lock** with its own PIN and optional fingerprint unlock, and **Hide in screenshots** / **Hide in recent apps** (all off until you turn them on)
-- **English and Dutch:** TalkCtrl follows your phone's language (Dutch when the phone is set to Dutch, English otherwise)
+- **English, Dutch, French and German:** TalkCtrl follows your phone's language (Dutch, French or German when the phone is set to one of them, English otherwise). Android's per-app language setting lists them too
 - **Ctrl / Signal look**, shared by every Ctrl app: dark and light, high contrast, one violet accent, Space Grotesk and JetBrains Mono
 
 **Not in TalkCtrl:** Live Intercom and other cloud or internet features, Cardo accounts, paid feature unlocks, crash detection and SOS. VOX on/off and mesh private chat are shown but greyed out until they can be confirmed on a real unit.

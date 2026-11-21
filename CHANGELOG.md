@@ -4,6 +4,14 @@ What changed in each TalkCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## Unreleased
+
+Changes on `main` that aren't in a release yet. They ship with the next version.
+
+### New
+
+- **TalkCtrl in French and German, following the phone's language.** When your phone is set to French, TalkCtrl now shows in French (polite "vous"); set to German, it shows in German (informal "du"). Every screen, notification and message is translated, including the firmware update, the app lock and the You page. Cardo model names and technical terms (BLE, RFCOMM, VOX, RDS, DMC, Intercom, mesh) stay as they are. Android's per-app language setting (Settings > Apps > TalkCtrl > Language) now lists English, Dutch, French and German, so you can also pick a language for TalkCtrl alone. Not yet tried on a phone.
+
 ## v0.2.0 (2026-11-21)
 
 Built and checked by CI only: nothing in this release had been run on a phone when it was published.
