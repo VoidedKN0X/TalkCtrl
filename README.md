@@ -15,6 +15,7 @@ Part of the [Ctrl series](#the-ctrl-series) by VKNXWorks.
 ## Features
 
 - **Connect over Bluetooth LE**, the way the Cardo app does on current units, with classic Bluetooth (RFCOMM) as a fallback in Settings. TalkCtrl remembers your unit and reconnects when you open it
+- **Low battery warning:** a notification when the unit's battery reaches 10, 15, 20 or 30 % (off until you turn it on), while TalkCtrl is connected
 - **Unit info:** battery and charging, firmware version, name (rename it), serial number (shown on the phone only, after a tap)
 - **Volumes:** speaker (prompts), intercom, music, phone and FM, plus how loud music stays during an intercom call
 - **Sound:** automatic (speed-based) volume, audio profiles (EQ), music sharing, phone and intercom together

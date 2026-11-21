@@ -57,6 +57,7 @@ fun SettingsScreen() {
                     set { it.copy(useRfcomm = on) }
                 }
             }
+            BatteryGroup(settings)
             PrivacyAndSecurityGroup(settings)
             BackupGroup()
         }

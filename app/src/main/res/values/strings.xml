@@ -317,4 +317,14 @@
     <string name="diag_save">Choose where to save</string>
     <string name="diag_saved">Diagnostics saved</string>
     <string name="diag_failed">Couldn\'t save the file</string>
+
+    <!-- Low battery -->
+    <string name="group_notifications">Notifications</string>
+    <string name="low_battery">Low battery warning</string>
+    <string name="low_battery_at">At %1$d %%</string>
+    <string name="low_battery_footer">A notification when your unit\'s battery reaches this level, once per drop (again after charging or when it rises 5 % above). It works while TalkCtrl is connected to the unit, open or in the background, as long as Android keeps TalkCtrl running. Nothing extra is sent to the unit.</string>
+    <string name="low_battery_no_permission">Without permission to show notifications, TalkCtrl can\'t warn you. You can allow it in the app\'s Android settings.</string>
+    <string name="low_battery_title">Unit battery at %1$d %%</string>
+    <string name="low_battery_text">Charge your intercom soon.</string>
+    <string name="ch_battery">Unit battery</string>
 </resources>

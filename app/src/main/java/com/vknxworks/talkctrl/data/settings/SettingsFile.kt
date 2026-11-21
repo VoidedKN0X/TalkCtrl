@@ -23,10 +23,14 @@ data class SettingsFile(
     val hideRecents: Boolean? = null,
     /** FM station names by frequency word (MHz × 100) as text. */
     val fmNames: Map<String, String>? = null,
+    /** Low-battery warning level in % (0 off). Only turned on by an import when notifications are allowed. */
+    val lowBattery: Int? = null,
 ) {
     companion object {
         const val FORMAT = "talkctrl-settings"
         const val VERSION = 1
+        /** The levels offered in Settings (0 = off). */
+        val LOW_BATTERY_CHOICES = listOf(0, 10, 15, 20, 30)
         private val json = Json { ignoreUnknownKeys = true; prettyPrint = true; explicitNulls = false }
 
         fun profilesOf(s: AppSettings, appVersion: String, createdAt: String) = SettingsFile(
@@ -39,6 +43,7 @@ data class SettingsFile(
             useRfcomm = s.useRfcomm, modelFolder = s.modelFolder, lockTimeout = s.lockTimeout.name,
             hideScreenshots = s.hideScreenshots, hideRecents = s.hideRecents,
             fmNames = s.fmNames.mapKeys { it.key.toString() },
+            lowBattery = s.lowBattery,
         )
 
         fun encode(f: SettingsFile): String = json.encodeToString(serializer(), f)
@@ -64,7 +69,7 @@ data class SettingsFile(
      * "Hide in screenshots" and "Hide in recent apps" can only be turned on, never off; the app lock itself and
      * the remembered unit are never touched.
      */
-    fun applyTo(current: AppSettings): AppSettings {
+    fun applyTo(current: AppSettings, canNotify: Boolean = true): AppSettings {
         val newProfiles = profiles.orEmpty().mapNotNull { (k, v) ->
             val slot = ProfileSlot.entries.firstOrNull { it.name == k } ?: return@mapNotNull null
             if (validProfile(v)) slot to v.lowercase() else null
@@ -82,6 +87,7 @@ data class SettingsFile(
             hideScreenshots = current.hideScreenshots || hideScreenshots == true,
             hideRecents = current.hideRecents || hideRecents == true,
             fmNames = names ?: current.fmNames,
+            lowBattery = lowBattery?.takeIf { it in LOW_BATTERY_CHOICES && (it == 0 || canNotify) } ?: current.lowBattery,
         )
     }
 }

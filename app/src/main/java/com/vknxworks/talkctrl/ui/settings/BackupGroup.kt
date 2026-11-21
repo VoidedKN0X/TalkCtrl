@@ -68,7 +68,8 @@ fun BackupGroup() {
                 }
             }.getOrNull()
             val cur = c.settings.settings.value
-            val next = file?.applyTo(cur)
+            val canNotify = context.checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) == android.content.pm.PackageManager.PERMISSION_GRANTED
+            val next = file?.applyTo(cur, canNotify)
             withContext(Dispatchers.Main) {
                 when {
                     file == null || next == null -> Toast.makeText(context, context.getString(R.string.file_invalid), Toast.LENGTH_LONG).show()
@@ -104,7 +105,8 @@ fun BackupGroup() {
                     pending = null
                     c.appScope.launch {
                         // Applied to what is saved at this moment, so nothing outside the file is undone.
-                        c.settings.update { file.applyTo(it) }
+                        val canNotify = context.checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) == android.content.pm.PackageManager.PERMISSION_GRANTED
+                        c.settings.update { file.applyTo(it, canNotify) }
                         withContext(Dispatchers.Main) { Toast.makeText(context, context.getString(R.string.imported), Toast.LENGTH_SHORT).show() }
                     }
                 }) { Text(stringResource(R.string.import_replace), color = CtrlColors.AccentText) }
@@ -126,4 +128,5 @@ private fun changes(context: Context, a: AppSettings, b: AppSettings): List<Stri
     if (a.hideScreenshots != b.hideScreenshots) add(context.getString(R.string.hide_screenshots))
     if (a.hideRecents != b.hideRecents) add(context.getString(R.string.hide_recents))
     if (a.fmNames != b.fmNames) add(context.getString(R.string.import_fm_names))
+    if (a.lowBattery != b.lowBattery) add(context.getString(R.string.low_battery))
 }

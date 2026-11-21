@@ -53,6 +53,8 @@ data class AppSettings(
     val hideRecents: Boolean = false,
     /** Your own names for FM stations, by frequency word (MHz × 100), kept on the phone only. */
     val fmNames: Map<Int, String> = emptyMap(),
+    /** Warn when the unit's battery reaches this % (0: off). */
+    val lowBattery: Int = 0,
 ) {
     /** The name you gave [mhz], if any. */
     fun fmName(mhz: Double?): String? = mhz?.let { fmNames[Math.round(it * 100).toInt()] }
@@ -81,6 +83,7 @@ class SettingsRepository(private val context: Context, scope: CoroutineScope) {
         val hideScreenshots = booleanPreferencesKey("hide_screenshots")
         val hideRecents = booleanPreferencesKey("hide_recents")
         val fmNames = stringPreferencesKey("fm_names")
+        val lowBattery = androidx.datastore.preferences.core.intPreferencesKey("low_battery")
     }
 
     private val prefs: Flow<Preferences> = context.appDataStore.data.catch { e ->
@@ -101,6 +104,7 @@ class SettingsRepository(private val context: Context, scope: CoroutineScope) {
         hideScreenshots = this[K.hideScreenshots] ?: false,
         hideRecents = this[K.hideRecents] ?: false,
         fmNames = decodeFmNames(this[K.fmNames]),
+        lowBattery = (this[K.lowBattery] ?: 0).coerceIn(0, 50),
     )
 
     /** Saves a change. If the phone's storage fails, the change is dropped instead of closing the app. */
@@ -117,6 +121,7 @@ class SettingsRepository(private val context: Context, scope: CoroutineScope) {
                 p[K.hideScreenshots] = s.hideScreenshots
                 p[K.hideRecents] = s.hideRecents
                 p.putOrRemove(K.fmNames, encodeFmNames(s.fmNames).ifEmpty { null })
+                p[K.lowBattery] = s.lowBattery
             }
         } catch (e: IOException) {
             // Nothing to do: the settings stay as they were.
