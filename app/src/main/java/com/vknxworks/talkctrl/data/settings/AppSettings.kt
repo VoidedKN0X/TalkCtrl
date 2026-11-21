@@ -51,7 +51,24 @@ data class AppSettings(
     val lockTimeout: LockTimeout = LockTimeout.IMMEDIATELY,
     val hideScreenshots: Boolean = false,
     val hideRecents: Boolean = false,
-)
+    /** Your own names for FM stations, by frequency word (MHz × 100), kept on the phone only. */
+    val fmNames: Map<Int, String> = emptyMap(),
+) {
+    /** The name you gave [mhz], if any. */
+    fun fmName(mhz: Double?): String? = mhz?.let { fmNames[Math.round(it * 100).toInt()] }
+}
+
+/** [AppSettings.fmNames] as stored: one "frequency=name" per line (names can't hold a line break). */
+internal fun encodeFmNames(m: Map<Int, String>): String = m.entries.sortedBy { it.key }.joinToString("\n") { "${it.key}=${it.value}" }
+
+internal fun decodeFmNames(s: String?): Map<Int, String> = s.orEmpty().lines().mapNotNull { line ->
+    val i = line.indexOf('=')
+    if (i <= 0) return@mapNotNull null
+    val f = line.substring(0, i).toIntOrNull() ?: return@mapNotNull null
+    val n = line.substring(i + 1).trim()
+    if (n.isEmpty()) null else f to n
+}.toMap()
+
 
 class SettingsRepository(private val context: Context, scope: CoroutineScope) {
     private object K {
@@ -63,6 +80,7 @@ class SettingsRepository(private val context: Context, scope: CoroutineScope) {
         val lockTimeout = stringPreferencesKey("lock_timeout")
         val hideScreenshots = booleanPreferencesKey("hide_screenshots")
         val hideRecents = booleanPreferencesKey("hide_recents")
+        val fmNames = stringPreferencesKey("fm_names")
     }
 
     private val prefs: Flow<Preferences> = context.appDataStore.data.catch { e ->
@@ -82,6 +100,7 @@ class SettingsRepository(private val context: Context, scope: CoroutineScope) {
         lockTimeout = enumOr(this[K.lockTimeout], LockTimeout.IMMEDIATELY),
         hideScreenshots = this[K.hideScreenshots] ?: false,
         hideRecents = this[K.hideRecents] ?: false,
+        fmNames = decodeFmNames(this[K.fmNames]),
     )
 
     /** Saves a change. If the phone's storage fails, the change is dropped instead of closing the app. */
@@ -97,6 +116,7 @@ class SettingsRepository(private val context: Context, scope: CoroutineScope) {
                 p[K.lockTimeout] = s.lockTimeout.name
                 p[K.hideScreenshots] = s.hideScreenshots
                 p[K.hideRecents] = s.hideRecents
+                p.putOrRemove(K.fmNames, encodeFmNames(s.fmNames).ifEmpty { null })
             }
         } catch (e: IOException) {
             // Nothing to do: the settings stay as they were.

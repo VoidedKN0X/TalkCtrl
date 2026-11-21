@@ -48,6 +48,8 @@ import com.vknxworks.talkctrl.ui.theme.CtrlColors
 import com.vknxworks.talkctrl.ui.theme.CtrlType
 import com.vknxworks.talkctrl.ui.theme.Gutter
 import java.util.Locale
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import kotlinx.coroutines.launch
 
 @Composable
 fun RadioScreen() {
@@ -55,6 +57,8 @@ fun RadioScreen() {
     val c = context.container
     val unit = rememberUnit()
     val send = rememberSender()
+    val scope = androidx.compose.runtime.rememberCoroutineScope()
+    val settings by c.settings.settings.collectAsStateWithLifecycle()
     var tuning by remember { mutableStateOf(false) }
     var editPreset by remember { mutableStateOf<Int?>(null) }
     val japan = unit.user?.fmRegion == 1
@@ -82,6 +86,7 @@ fun RadioScreen() {
                 Spacer(Modifier.weight(1f))
                 Text(unit.fmMhz?.let { fmt(it) } ?: "–", style = CtrlType.Readout, color = CtrlColors.Text)
             }
+            settings.fmName(unit.fmMhz)?.let { Text(it, style = CtrlType.Data, color = CtrlColors.Muted) }
             Spacer(Modifier.size(14.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
                 CtrlButton(
@@ -112,9 +117,13 @@ fun RadioScreen() {
                 val editButton: (@Composable () -> Unit)? = if (presets == null) null else {
                     { IconButton(onClick = { editPreset = n }) { Icon(Icons.Outlined.Edit, stringResource(R.string.edit_preset), tint = CtrlColors.Muted) } }
                 }
+                val name = settings.fmName(f)
                 GroupRow(
-                    stringResource(R.string.preset_n, n),
-                    if (unit.fmPreset == n && on) stringResource(R.string.playing) else null,
+                    name ?: stringResource(R.string.preset_n, n),
+                    listOfNotNull(
+                        if (name != null) stringResource(R.string.preset_n, n) else null,
+                        if (unit.fmPreset == n && on) stringResource(R.string.playing) else null,
+                    ).joinToString(" · ").ifEmpty { null },
                     value = f?.let { fmt(it) } ?: stringResource(R.string.preset_empty),
                     onClick = { send { c.link.send(Caip.fmPlayPreset(n)) } },
                     trailing = editButton,
@@ -138,17 +147,34 @@ fun RadioScreen() {
     }
 
     if (tuning) {
-        FrequencyDialog(stringResource(R.string.fm_tune_to), unit.fmMhz, range, allowEmpty = false, onDismiss = { tuning = false }) { f ->
+        FrequencyDialog(stringResource(R.string.fm_tune_to), unit.fmMhz, range, allowEmpty = false, onDismiss = { tuning = false }) { f, _ ->
             tuning = false
             if (f != null) send { c.link.send(Caip.fmSetFrequency(f)) }
         }
     }
     editPreset?.let { n ->
         val cur = unit.presets ?: return@let
-        FrequencyDialog(stringResource(R.string.preset_n, n), cur.getOrNull(n - 1)?.takeIf { it > 0 }, range, allowEmpty = true, onDismiss = { editPreset = null }) { f ->
+        val old = cur.getOrNull(n - 1)?.takeIf { it > 0 }
+        FrequencyDialog(
+            stringResource(R.string.preset_n, n), old, range, allowEmpty = true,
+            initialName = settings.fmName(old).orEmpty(),
+            onDismiss = { editPreset = null },
+        ) { f, name ->
             editPreset = null
-            val next = cur.toMutableList().also { it[n - 1] = f ?: 0.0 }
-            send { c.link.setPresets(next) }
+            // The name stays on the phone (the unit has no place for it), keyed by the frequency.
+            if (f != null) {
+                val key = Math.round(f * 100).toInt()
+                scope.launch {
+                    c.settings.update { s ->
+                        s.copy(fmNames = if (name.isBlank()) s.fmNames - key else s.fmNames + (key to name.trim()))
+                    }
+                }
+            }
+            val sameFrequency = f != null && old != null && Math.round(f * 100) == Math.round(old * 100)
+            if (!sameFrequency) {
+                val next = cur.toMutableList().also { it[n - 1] = f ?: 0.0 }
+                send { c.link.setPresets(next) }
+            }
         }
     }
 }
@@ -156,7 +182,16 @@ fun RadioScreen() {
 private fun fmt(mhz: Double) = String.format(Locale.ROOT, "%.2f", mhz).trimEnd('0').trimEnd('.').let { if ('.' in it) it else "$it.0" } + " MHz"
 
 @Composable
-private fun FrequencyDialog(title: String, initial: Double?, range: ClosedFloatingPointRange<Double>, allowEmpty: Boolean, onDismiss: () -> Unit, onDone: (Double?) -> Unit) {
+private fun FrequencyDialog(
+    title: String,
+    initial: Double?,
+    range: ClosedFloatingPointRange<Double>,
+    allowEmpty: Boolean,
+    initialName: String? = null,
+    onDismiss: () -> Unit,
+    onDone: (Double?, String) -> Unit,
+) {
+    var name by remember { mutableStateOf(initialName.orEmpty()) }
     var text by remember { mutableStateOf(initial?.let { String.format(Locale.ROOT, "%.2f", it).trimEnd('0').trimEnd('.') } ?: "") }
     val value = text.replace(',', '.').toDoubleOrNull()
     // 50 kHz steps only, inside the region's band.
@@ -173,6 +208,16 @@ private fun FrequencyDialog(title: String, initial: Double?, range: ClosedFloati
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                     modifier = Modifier.fillMaxWidth(),
                 )
+                if (initialName != null) {
+                    Spacer(Modifier.size(10.dp))
+                    CtrlTextField(
+                        value = name,
+                        onValueChange = { name = it.replace('\n', ' ').take(30) },
+                        singleLine = true,
+                        placeholder = { Text(stringResource(R.string.preset_name_hint)) },
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
                 Spacer(Modifier.size(8.dp))
                 Text(
                     stringResource(R.string.fm_range, fmt(range.start), fmt(range.endInclusive)) + if (allowEmpty) "\n" + stringResource(R.string.preset_clear_hint) else "",
@@ -181,7 +226,7 @@ private fun FrequencyDialog(title: String, initial: Double?, range: ClosedFloati
                 )
             }
         },
-        confirmButton = { TextButton(onClick = { onDone(if (text.isBlank()) null else value) }, enabled = valid) { Text(stringResource(R.string.save)) } },
+        confirmButton = { TextButton(onClick = { onDone(if (text.isBlank()) null else value, name) }, enabled = valid) { Text(stringResource(R.string.save)) } },
         dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel), color = CtrlColors.Text) } },
     )
 }

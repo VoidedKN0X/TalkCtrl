@@ -4,6 +4,14 @@ What changed in each TalkCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## Unreleased
+
+Changes on `main` that aren't in a release yet. They ship with the next version.
+
+### New
+
+- **Names for FM presets.** The pencil next to a preset on the Radio tab now also takes a name ("Studio Brussel", "Radio 2"). The preset then shows under that name, and the Radio card shows the name of the station you are listening to when it has one. Names are kept on the phone only, the unit has no place for them, and belong to the frequency: a name follows the station, not the preset number. Changing only the name sends nothing to the unit. Not yet tried with a real Cardo unit.
+
 ## v0.1.3 (2026-11-21)
 
 Built and checked by CI only: nothing in this release had been run on a phone when it was published. It is the first release built with the new build tools (Android Gradle Plugin 9, stricter code shrinking), so update over your installed version and check that your data and settings are still there. It has also never been tried with a real Cardo unit.

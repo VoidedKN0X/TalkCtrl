@@ -20,7 +20,7 @@ Part of the [Ctrl series](#the-ctrl-series) by VKNXWorks.
 - **Sound:** automatic (speed-based) volume, audio profiles (EQ), music sharing, phone and intercom together
 - **Voice:** voice prompts on or off, prompt language (from the languages your unit has), voice commands
 - **Microphone:** VOX sensitivity and noise gate
-- **FM radio:** on/off, tune to a frequency, seek, scan, auto tune, six presets (play and edit), region and RDS
+- **FM radio:** on/off, tune to a frequency, seek, scan, auto tune, six presets (play and edit, with your own station names kept on the phone), region and RDS
 - **Intercom:** mesh groups (create, join, add riders, stop, mute, bridge to Bluetooth intercom, delete), Bluetooth intercom channels A/B/C (pair, call, end, conference, reset riders), speed dial number and call
 - **Profiles:** save the unit's volumes and settings as Solo, Duo and Group and switch with one tap
 - **Factory reset**, with a confirmation

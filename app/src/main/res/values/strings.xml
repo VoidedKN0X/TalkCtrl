@@ -149,7 +149,8 @@
     <string name="fm_auto_tune">Auto tune</string>
     <string name="fm_auto_tune_sub">Finds the strongest stations</string>
     <string name="group_presets">Presets</string>
-    <string name="presets_footer">Tap a preset to play it; the pencil changes it.</string>
+    <string name="presets_footer">Tap a preset to play it; the pencil changes its frequency and name. Names stay on this phone (the unit has no place for them) and belong to the frequency.</string>
+    <string name="preset_name_hint">Name (optional), e.g. Studio Brussel</string>
     <string name="preset_n">Preset %1$d</string>
     <string name="preset_empty">Empty</string>
     <string name="playing">Playing</string>
