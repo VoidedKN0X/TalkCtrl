@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Badge
+import androidx.compose.material.icons.outlined.BugReport
 import androidx.compose.material.icons.outlined.BatteryChargingFull
 import androidx.compose.material.icons.outlined.Bluetooth
 import androidx.compose.material.icons.outlined.Edit
@@ -111,6 +112,18 @@ fun UnitScreen() {
     var confirmReset by remember { mutableStateOf(false) }
     var showSerial by remember { mutableStateOf(false) }
     var profileSlot by remember { mutableStateOf<ProfileSlot?>(null) }
+    var showDiag by remember { mutableStateOf(false) }
+    val diagPicker = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("text/plain")) { uri ->
+        if (uri == null) return@rememberLauncherForActivityResult
+        // Built at the moment you save, from what TalkCtrl has in memory; personal details are left out.
+        val text = com.vknxworks.talkctrl.diag.Diagnostics.build(c.link.state.value, c.settings.settings.value, c.link.log.snapshot())
+        scope.launch {
+            val ok = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) {
+                runCatching { context.contentResolver.openOutputStream(uri, "wt")?.use { it.write(text.toByteArray()) } != null }.getOrDefault(false)
+            }
+            Toast.makeText(context, context.getString(if (ok) R.string.diag_saved else R.string.diag_failed), Toast.LENGTH_SHORT).show()
+        }
+    }
 
     val title = unit.name ?: settings.unitName ?: stringResource(R.string.no_unit)
     TabPage(title, stringResource(R.string.label_unit)) {
@@ -201,6 +214,13 @@ fun UnitScreen() {
 
         Group(stringResource(R.string.group_maintenance)) {
             GroupRow(
+                stringResource(R.string.diag_export),
+                stringResource(R.string.diag_export_sub),
+                icon = Icons.Outlined.BugReport,
+                showChevron = true,
+                onClick = { showDiag = true },
+            )
+            GroupRow(
                 stringResource(R.string.firmware_update),
                 stringResource(R.string.firmware_update_sub),
                 icon = Icons.Outlined.SystemUpdate,
@@ -223,6 +243,21 @@ fun UnitScreen() {
         SmallNote(stringResource(R.string.out_of_scope))
     }
 
+    if (showDiag) {
+        com.vknxworks.talkctrl.ui.components.CtrlAlertDialog(
+            onDismissRequest = { showDiag = false },
+            title = { Text(stringResource(R.string.diag_title), style = MaterialTheme.typography.titleLarge) },
+            text = { Text(stringResource(R.string.diag_body), style = MaterialTheme.typography.bodyMedium) },
+            confirmButton = {
+                androidx.compose.material3.TextButton(onClick = {
+                    showDiag = false
+                    com.vknxworks.talkctrl.ui.lock.AppLock.expectReturn()
+                    diagPicker.launch("talkctrl-diagnostics-${java.time.LocalDate.now()}.txt")
+                }) { Text(stringResource(R.string.diag_save), color = CtrlColors.AccentText) }
+            },
+            dismissButton = { androidx.compose.material3.TextButton(onClick = { showDiag = false }) { Text(stringResource(R.string.cancel), color = CtrlColors.Text) } },
+        )
+    }
     if (showScan && granted) ScanSheet(onDismiss = { showScan = false }) { u ->
         showScan = false
         c.connect(u.address, u.name)

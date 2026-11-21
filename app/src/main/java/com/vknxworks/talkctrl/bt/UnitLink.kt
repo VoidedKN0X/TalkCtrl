@@ -83,6 +83,9 @@ class UnitLink(private val context: Context) {
     private val _state = MutableStateFlow(UnitState())
     val state: StateFlow<UnitState> = _state.asStateFlow()
 
+    /** The last messages both ways, personal ones reduced to opcode and length (for the diagnostics export). */
+    val log = com.vknxworks.talkctrl.diag.MessageLog()
+
     /** Every message from the unit, parsed. */
     val messages = MutableSharedFlow<Caip.Message>(extraBufferCapacity = 64)
     private val raw = MutableSharedFlow<ByteArray>(extraBufferCapacity = 64)
@@ -103,6 +106,7 @@ class UnitLink(private val context: Context) {
             null
         } ?: run { _state.value = UnitState(LinkState.FAILED, address); return }
         _state.value = UnitState(LinkState.CONNECTING, address, rfcomm)
+        log.reset(System.currentTimeMillis())
         job = scope.launch {
             try {
                 if (rfcomm) runRfcomm(device) else device.connectGatt(context, false, gattCallback, BluetoothDevice.TRANSPORT_LE).also { gatt = it }
@@ -148,6 +152,7 @@ class UnitLink(private val context: Context) {
     /** Queues one CAIP message. False when not connected. */
     fun send(msg: ByteArray): Boolean {
         if (gatt == null && socket == null) return false
+        log.add(System.currentTimeMillis(), outgoing = true, msg)
         val s = socket
         if (s != null) {
             scope.launch(Dispatchers.IO) {
@@ -308,6 +313,7 @@ class UnitLink(private val context: Context) {
     }
 
     private fun onRaw(d: ByteArray) {
+        log.add(System.currentTimeMillis(), outgoing = false, d)
         val m = Caip.parse(d) ?: return
         _state.update { s ->
             when (m) {

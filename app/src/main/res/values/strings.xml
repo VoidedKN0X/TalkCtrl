@@ -308,4 +308,13 @@
     <string name="import_profile_replaced">Profile %1$s</string>
     <string name="import_model">Model for firmware updates</string>
     <string name="import_fm_names">FM station names</string>
+
+    <!-- Diagnostics -->
+    <string name="diag_export">Export diagnostics</string>
+    <string name="diag_export_sub">A text file of what TalkCtrl sees of your unit, to check it works</string>
+    <string name="diag_title">Export diagnostics</string>
+    <string name="diag_body">The file lists TalkCtrl and Android versions, the phone model, how the unit is connected, its firmware, settings records, capabilities, battery, FM state and the last messages between phone and unit (since connecting, kept in memory only).\n\nLeft out: the unit\'s name, serial number and Bluetooth address, your speed-dial number and your FM station names. Messages that carry them show only their type and length.\n\nThe file is saved where you choose and never sent anywhere.</string>
+    <string name="diag_save">Choose where to save</string>
+    <string name="diag_saved">Diagnostics saved</string>
+    <string name="diag_failed">Couldn\'t save the file</string>
 </resources>
