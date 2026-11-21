@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Badge
+import androidx.compose.material.icons.outlined.TwoWheeler
 import androidx.compose.material.icons.outlined.BugReport
 import androidx.compose.material.icons.outlined.BatteryChargingFull
 import androidx.compose.material.icons.outlined.Bluetooth
@@ -167,6 +168,15 @@ fun UnitScreen() {
                             CtrlButton(stringResource(R.string.connect), onClick = { c.reconnect() }, modifier = Modifier.weight(1f))
                     }
                     CtrlSecondaryButton(onClick = { showScan = true }, modifier = Modifier.weight(1f)) { Text(stringResource(R.string.find_units)) }
+                }
+                if (unit.connected) {
+                    Spacer(Modifier.size(10.dp))
+                    CtrlButton(
+                        stringResource(R.string.riding_mode),
+                        onClick = { nav.navigate(com.vknxworks.talkctrl.ui.nav.RidingRoute) },
+                        icon = Icons.Outlined.TwoWheeler,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
                 }
             }
         }

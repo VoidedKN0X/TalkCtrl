@@ -10,6 +10,7 @@ import kotlinx.serialization.Serializable
 
 // Opened from the Unit tab
 @Serializable data object UpdateRoute
+@Serializable data object RidingRoute
 
 // Opened from the profile picture: the You page, and Settings from there
 @Serializable data object YouRoute

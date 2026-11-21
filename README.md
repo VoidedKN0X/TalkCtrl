@@ -23,6 +23,7 @@ Part of the [Ctrl series](#the-ctrl-series) by VKNXWorks.
 - **Microphone:** VOX sensitivity and noise gate
 - **FM radio:** on/off, tune to a frequency, seek, scan, auto tune, six presets (play and edit, with your own station names kept on the phone), region and RDS
 - **Intercom:** mesh groups (create, join, add riders, stop, mute, bridge to Bluetooth intercom, delete), Bluetooth intercom channels A/B/C (pair, call, end, conference, reset riders), speed dial number and call
+- **Riding mode:** big buttons you can hit with gloves on (FM on/off, next preset, seek, music louder/quieter, mute the mesh mic, end intercom calls), battery and station at the top, and the screen kept on
 - **Profiles:** save the unit's volumes and settings as Solo, Duo and Group and switch with one tap; export them to a file and import them again (on this or another phone)
 - **Settings file:** export TalkCtrl's settings and FM station names and import them, after seeing what will be replaced. Never includes your unit's address, name or serial number or the app lock's PIN
 - **Diagnostics export:** a text file of what TalkCtrl sees of your unit (versions, connection, settings records, capabilities and the last messages both ways) to check it works on a real unit. The unit's name, serial number and Bluetooth address, your speed-dial number and station names are left out

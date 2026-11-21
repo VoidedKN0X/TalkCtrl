@@ -327,4 +327,15 @@
     <string name="low_battery_title">Unit battery at %1$d %%</string>
     <string name="low_battery_text">Charge your intercom soon.</string>
     <string name="ch_battery">Unit battery</string>
+
+    <!-- Riding mode -->
+    <string name="riding_mode">Riding mode</string>
+    <string name="riding_exit">Exit</string>
+    <string name="riding_next_preset">Next preset</string>
+    <string name="riding_music_down">Music quieter</string>
+    <string name="riding_music_up">Music louder</string>
+    <string name="riding_mute">Mute mesh mic</string>
+    <string name="riding_unmute">Unmute mesh mic</string>
+    <string name="riding_fm_on">FM · %1$s</string>
+    <string name="riding_music_level">Music volume %1$d / %2$d</string>
 </resources>

@@ -184,6 +184,7 @@ private fun AppNavHost(navController: NavHostController) {
         composable<RadioRoute> { RadioScreen() }
         composable<IntercomRoute> { IntercomScreen() }
         composable<UpdateRoute> { UpdateScreen() }
+        composable<RidingRoute> { com.vknxworks.talkctrl.ui.unit.RidingScreen() }
         composable<YouRoute> { YouScreen() }
         composable<SettingsRoute> { SettingsScreen() }
     }
