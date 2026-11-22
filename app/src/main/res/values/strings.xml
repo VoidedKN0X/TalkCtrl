@@ -5,7 +5,10 @@
     <string name="app_lock_subtitle">Ask for an app PIN (and optionally your fingerprint) when opening TalkCtrl. A firmware transfer that\'s running keeps going.</string>
     <string name="app_lock_footer">TalkCtrl talks to your unit over Bluetooth. The only internet use is a firmware check or download you start yourself, to Cardo\'s public update server, sending only the model name. No account, analytics or tracking.</string>
     <string name="lock_prompt_subtitle">Your intercom</string>
-    <string name="lock_forgot_body">The PIN can\'t be recovered. TalkCtrl will forget your unit and saved profiles, and turn the app lock off. Nothing on the unit itself is changed.</string>
+    <string name="lock_forgot_body">The PIN can\'t be recovered. TalkCtrl will forget your unit and saved profiles, and turn the app lock off. Nothing on the unit itself is changed. If your phone has a screen lock, you\'ll confirm with it first.</string>
+    <string name="lock_reset_prompt_title">Reset TalkCtrl\'s app lock</string>
+    <string name="lock_reset_prompt_subtitle">Use your phone\'s screen lock to confirm it\'s you</string>
+    <string name="lock_reset_prompt_failed">Couldn\'t show the screen lock prompt</string>
 
     <!-- Tabs -->
     <string name="tab_unit">Unit</string>
@@ -289,7 +292,7 @@
 
     <!-- Profiles and settings file -->
     <string name="group_backup">Profiles and settings file</string>
-    <string name="backup_footer">Only on the phone and in the file you choose. The file never holds your unit\'s address, name or serial number, or the app lock\'s PIN. An import never turns off Hide in screenshots or Hide in recent apps and doesn\'t change the app lock. Profiles are stored in TalkCtrl; nothing is sent to the unit until you apply one.</string>
+    <string name="backup_footer">Only on the phone and in the file you choose. The file never holds your unit\'s address, name or serial number, or the app lock\'s PIN. An import never turns off Hide in screenshots or Hide in recent apps, never lets the app lock wait longer before it asks again, and doesn\'t turn the app lock on or off or change its PIN. Profiles are stored in TalkCtrl; nothing is sent to the unit until you apply one.</string>
     <string name="export_profiles">Export profiles</string>
     <string name="export_profiles_sub">Save Solo, Duo and Group in a file</string>
     <string name="export_settings">Export settings</string>

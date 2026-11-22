@@ -66,7 +66,8 @@ data class SettingsFile(
 
     /**
      * [current] with this file applied. Profiles that aren't valid records and unknown slots are skipped;
-     * "Hide in screenshots" and "Hide in recent apps" can only be turned on, never off; the app lock itself and
+     * "Hide in screenshots" and "Hide in recent apps" can only be turned on, never off, and the lock timeout can
+     * only get shorter; the app lock itself and
      * the remembered unit are never touched.
      */
     fun applyTo(current: AppSettings, canNotify: Boolean = true): AppSettings {
@@ -83,7 +84,10 @@ data class SettingsFile(
             profiles = current.profiles + newProfiles,
             useRfcomm = useRfcomm ?: current.useRfcomm,
             modelFolder = modelFolder?.takeIf { Regex("^[A-Za-z0-9_]{1,64}$").matches(it) } ?: current.modelFolder,
-            lockTimeout = lockTimeout?.let { n -> LockTimeout.entries.firstOrNull { it.name == n } } ?: current.lockTimeout,
+            // Like the two Hide switches, a file can only make the lock stricter: its timeout is used only
+            // when it asks again sooner than the one set here.
+            lockTimeout = lockTimeout?.let { n -> LockTimeout.entries.firstOrNull { it.name == n } }
+                ?.takeIf { lockWaitRank(it.millis) < lockWaitRank(current.lockTimeout.millis) } ?: current.lockTimeout,
             hideScreenshots = current.hideScreenshots || hideScreenshots == true,
             hideRecents = current.hideRecents || hideRecents == true,
             fmNames = names ?: current.fmNames,
@@ -91,3 +95,9 @@ data class SettingsFile(
         )
     }
 }
+
+/**
+ * How long the app lock waits before asking again, for comparing timeouts: the smaller, the stricter.
+ * A negative value ("only when TalkCtrl restarts") waits the longest.
+ */
+internal fun lockWaitRank(millis: Long): Long = if (millis < 0) Long.MAX_VALUE else millis

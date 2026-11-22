@@ -19,6 +19,7 @@ import com.vknxworks.talkctrl.protocol.FirmwareFile
 import com.vknxworks.talkctrl.protocol.Gaia
 import com.vknxworks.talkctrl.protocol.GaiaDialect
 import com.vknxworks.talkctrl.protocol.UpgradeEngine
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -29,6 +30,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 enum class Ending { COMPLETE, ABORTED, BATTERY_LOW, UNIT_ERROR, CONNECTION_LOST, PROTOCOL, NOT_READY, FILE }
@@ -67,14 +69,23 @@ class FirmwareService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
             ACTION_START -> {
-                if (_state.value.running) return START_NOT_STICKY
+                // Every startForegroundService() must be answered with startForeground(), also a start that is
+                // then refused, or Android stops the app ("did not then call startForeground").
+                val running = _state.value.running
+                startForeground(
+                    NOTIF_ID,
+                    if (running) notification(_state.value.percent.toInt(), progressText()) else notification(0, getString(R.string.upd_phase_preparing)),
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE,
+                )
+                // A second start during a transfer is ignored: the running one keeps its engine and link.
+                if (running) return START_NOT_STICKY
                 val addr = intent.getStringExtra(EXTRA_ADDRESS)
                 val path = intent.getStringExtra(EXTRA_FILE)
                 if (addr == null || path == null) {
+                    stopForeground(STOP_FOREGROUND_REMOVE)
                     stopSelf()
                     return START_NOT_STICKY
                 }
-                startForeground(NOTIF_ID, notification(0, getString(R.string.upd_phase_preparing)), ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE)
                 begin(addr, File(path), if (intent.getBooleanExtra(EXTRA_V3, false)) GaiaDialect.V3 else GaiaDialect.V2)
             }
             ACTION_ABORT -> handler.post {
@@ -95,8 +106,11 @@ class FirmwareService : Service() {
         reconnects = 0
         _state.value = TransferState(running = true, phase = UpgradeEngine.Phase.CONNECTING)
         scope.launch {
+            // Up to 64 MB (FirmwareFile.MAX): read off the main thread.
             val bytes = try {
-                file.readBytes()
+                withContext(Dispatchers.IO) { file.readBytes() }
+            } catch (e: CancellationException) {
+                throw e
             } catch (_: Exception) {
                 return@launch finish(Ending.FILE)
             }
@@ -115,7 +129,7 @@ class FirmwareService : Service() {
     private fun connectGaia() {
         val addr = address ?: return
         gaia?.close()
-        val g = GaiaGatt(applicationContext, gattListener)
+        val g = GaiaGatt(applicationContext, gattListener, handler)
         gaia = g
         if (!g.connect(addr)) scheduleReconnect()
     }
@@ -214,7 +228,11 @@ class FirmwareService : Service() {
         val p = _state.value.percent.toInt()
         if (p == lastNotified && _state.value.phase != UpgradeEngine.Phase.REBOOTING) return
         lastNotified = p
-        val text = getString(
+        getSystemService(NotificationManager::class.java)?.notify(NOTIF_ID, notification(p, progressText()))
+    }
+
+    private fun progressText(): String =
+        getString(
             when (_state.value.phase) {
                 UpgradeEngine.Phase.TRANSFERRING -> R.string.upd_phase_transferring
                 UpgradeEngine.Phase.VALIDATING -> R.string.upd_phase_validating
@@ -224,8 +242,6 @@ class FirmwareService : Service() {
                 else -> R.string.upd_phase_preparing
             },
         )
-        getSystemService(NotificationManager::class.java)?.notify(NOTIF_ID, notification(p, text))
-    }
 
     private fun ensureChannel() {
         val nm = getSystemService(NotificationManager::class.java) ?: return
@@ -293,7 +309,9 @@ class FirmwareService : Service() {
         val state: StateFlow<TransferState> = _state.asStateFlow()
 
         fun start(context: Context, address: String, file: File, v3: Boolean) {
-            _state.value = TransferState()
+            // A fresh state only when nothing runs: resetting it during a transfer used to defeat the
+            // service's "already running" check and start a second engine and link next to the first.
+            if (!_state.value.running) _state.value = TransferState()
             context.startForegroundService(
                 Intent(context, FirmwareService::class.java).setAction(ACTION_START).putExtra(EXTRA_ADDRESS, address).putExtra(EXTRA_FILE, file.path).putExtra(EXTRA_V3, v3),
             )

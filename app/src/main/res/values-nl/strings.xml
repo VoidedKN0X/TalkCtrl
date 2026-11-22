@@ -5,7 +5,10 @@
     <string name="app_lock_subtitle">Vraag een app-pincode (en eventueel je vingerafdruk) bij het openen van TalkCtrl. Een lopende firmware-overdracht gaat gewoon door.</string>
     <string name="app_lock_footer">TalkCtrl praat via Bluetooth met je unit. Het enige internetgebruik is een firmwarecontrole of -download die je zelf start, naar de openbare updateserver van Cardo, waarbij alleen de modelnaam verstuurd wordt. Geen account, analytics of tracking.</string>
     <string name="lock_prompt_subtitle">Je intercom</string>
-    <string name="lock_forgot_body">De pincode kan niet teruggehaald worden. TalkCtrl vergeet je unit en bewaarde profielen en zet de app-vergrendeling uit. Op de unit zelf verandert niets.</string>
+    <string name="lock_forgot_body">De pincode kan niet teruggehaald worden. TalkCtrl vergeet je unit en bewaarde profielen en zet de app-vergrendeling uit. Op de unit zelf verandert niets. Heeft je telefoon een schermvergrendeling, dan bevestig je eerst daarmee.</string>
+    <string name="lock_reset_prompt_title">App-vergrendeling van TalkCtrl resetten</string>
+    <string name="lock_reset_prompt_subtitle">Bevestig met de schermvergrendeling van je telefoon dat jij het bent</string>
+    <string name="lock_reset_prompt_failed">De schermvergrendeling kon niet getoond worden</string>
     <string name="tab_unit">Unit</string>
     <string name="tab_audio">Audio</string>
     <string name="tab_radio">Radio</string>
@@ -270,7 +273,7 @@
     <string name="ch_update">Firmware-update</string>
     <string name="ch_update_desc">Verschijnt terwijl TalkCtrl firmware naar je unit stuurt, met Afbreken</string>
     <string name="group_backup">Bestand met profielen en instellingen</string>
-    <string name="backup_footer">Alleen op de telefoon en in het bestand dat je kiest. Het bestand bevat nooit het adres, de naam of het serienummer van je unit, of de pincode van de app-vergrendeling. Een import zet Verbergen in schermafbeeldingen of Verbergen in recente apps nooit uit en verandert de app-vergrendeling niet. Profielen worden in TalkCtrl bewaard; er gaat niets naar de unit tot je er een toepast.</string>
+    <string name="backup_footer">Alleen op de telefoon en in het bestand dat je kiest. Het bestand bevat nooit het adres, de naam of het serienummer van je unit, of de pincode van de app-vergrendeling. Een import zet Verbergen in schermafbeeldingen of Verbergen in recente apps nooit uit, laat de app-vergrendeling nooit langer wachten voor ze opnieuw vraagt, en zet de app-vergrendeling niet aan of uit en verandert de pincode niet. Profielen worden in TalkCtrl bewaard; er gaat niets naar de unit tot je er een toepast.</string>
     <string name="export_profiles">Profielen exporteren</string>
     <string name="export_profiles_sub">Bewaar Solo, Duo en Groep in een bestand</string>
     <string name="export_settings">Instellingen exporteren</string>

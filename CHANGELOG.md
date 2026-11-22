@@ -4,6 +4,19 @@ What changed in each TalkCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## Unreleased
+
+### Fixed
+
+- **A firmware update no longer hangs at the same percentage when a Bluetooth packet doesn't go out.** When Android refused to send one of the update's packets (the Bluetooth stack was still busy, or the link hiccupped), TalkCtrl dropped that packet without noticing and then waited forever for the unit's answer, so the progress stood still until you pressed **Abort**. TalkCtrl now sends the same packet again after half a second, as it already did for the normal control link; if that is refused too, it closes the update link and reports it as lost, so the usual reconnect-and-resume takes over (up to 5 tries, and the unit continues from its own resume point). **This needs a test on a real Cardo unit** (a complete update) before it can be trusted: nothing in it has run on a phone or a unit yet.
+- **Starting a firmware update can no longer make TalkCtrl crash or run two transfers at once.** If the update service was started without its details, or a second time while an update was running, Android could close TalkCtrl with a "did not call startForeground" error, and a second start also reset the progress on screen and started a second transfer next to the first. A second start is now ignored while one runs (its notification stays as it was), and a start without details ends cleanly.
+- **Loading a large firmware file no longer freezes the screen.** The firmware file (a few MB, at most 64 MB) was read on the main thread when the transfer started; it is now read in the background.
+
+### Security
+
+- **"Forgot PIN?" now asks for your phone's own screen lock first.** Before, anyone holding your unlocked phone could tap **Forgot PIN?** on TalkCtrl's lock screen and reset it to get past the app lock. Now, after you confirm in the dialog, Android shows its own screen-lock prompt (your phone PIN, pattern or password, or a strong fingerprint) and the reset only happens once that succeeds. Cancelling the prompt changes nothing. If your phone has no screen lock, the reset works as before, straight after the confirmation. The dialog text says so in all four languages.
+- **Importing a settings file can no longer make the app lock wait longer.** Hide in screenshots and Hide in recent apps could already only be turned on by an import, but the lock timeout was taken from the file as it was, so a file could change "Immediately" into "When TalkCtrl restarts". An import now only uses the file's timeout when it is shorter than yours. The text under the settings file section says so.
+
 ## v0.3.1 (2026-11-22)
 
 Built and checked by CI only: nothing in this release had been run on a phone when it was published.

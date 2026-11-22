@@ -6,7 +6,10 @@
     <string name="app_lock_subtitle">Demander un code (et éventuellement votre empreinte) à l\'ouverture de TalkCtrl. Un transfert de firmware en cours continue.</string>
     <string name="app_lock_footer">TalkCtrl communique avec votre unité via Bluetooth. Le seul usage d\'Internet est une vérification ou un téléchargement de firmware que vous lancez vous-même, vers le serveur de mise à jour public de Cardo, en n\'envoyant que le nom du modèle. Pas de compte, pas d\'analyse, pas de pistage.</string>
     <string name="lock_prompt_subtitle">Votre intercom</string>
-    <string name="lock_forgot_body">Le code ne peut pas être récupéré. TalkCtrl oubliera votre unité et les profils enregistrés, et désactivera le verrouillage. Rien n\'est modifié sur l\'unité elle-même.</string>
+    <string name="lock_forgot_body">Le code ne peut pas être récupéré. TalkCtrl oubliera votre unité et les profils enregistrés, et désactivera le verrouillage. Rien n\'est modifié sur l\'unité elle-même. Si votre téléphone a un verrouillage d\'écran, vous confirmerez d\'abord avec celui-ci.</string>
+    <string name="lock_reset_prompt_title">Réinitialiser le verrouillage de TalkCtrl</string>
+    <string name="lock_reset_prompt_subtitle">Utilisez le verrouillage d\'écran de votre téléphone pour confirmer votre identité</string>
+    <string name="lock_reset_prompt_failed">Impossible d\'afficher le verrouillage d\'écran</string>
 
     <!-- Tabs -->
     <string name="tab_unit">Unité</string>
@@ -290,7 +293,7 @@
 
     <!-- Profiles and settings file -->
     <string name="group_backup">Profils et fichier de paramètres</string>
-    <string name="backup_footer">Uniquement sur le téléphone et dans le fichier que vous choisissez. Le fichier ne contient jamais l\'adresse, le nom ou le numéro de série de votre unité, ni le code du verrouillage. Un import ne désactive jamais Masquer dans les captures d\'écran ni Masquer dans les applis récentes, et ne modifie pas le verrouillage de l\'appli. Les profils sont enregistrés dans TalkCtrl ; rien n\'est envoyé à l\'unité tant que vous n\'en appliquez pas un.</string>
+    <string name="backup_footer">Uniquement sur le téléphone et dans le fichier que vous choisissez. Le fichier ne contient jamais l\'adresse, le nom ou le numéro de série de votre unité, ni le code du verrouillage. Un import ne désactive jamais Masquer dans les captures d\'écran ni Masquer dans les applis récentes, ne fait jamais attendre plus longtemps le verrouillage de l\'appli avant qu\'il redemande le code, et n\'active, ne désactive ni ne modifie le verrouillage de l\'appli ou son code. Les profils sont enregistrés dans TalkCtrl ; rien n\'est envoyé à l\'unité tant que vous n\'en appliquez pas un.</string>
     <string name="export_profiles">Exporter les profils</string>
     <string name="export_profiles_sub">Enregistrer Solo, Duo et Groupe dans un fichier</string>
     <string name="export_settings">Exporter les paramètres</string>

@@ -6,7 +6,10 @@
     <string name="app_lock_subtitle">Beim Öffnen von TalkCtrl nach einer App-PIN fragen (und optional nach deinem Fingerabdruck). Eine laufende Firmware-Übertragung läuft weiter.</string>
     <string name="app_lock_footer">TalkCtrl spricht über Bluetooth mit deinem Gerät. Das Internet wird nur für eine Firmware-Prüfung oder einen Download genutzt, den du selbst startest, beim öffentlichen Update-Server von Cardo, und gesendet wird nur der Modellname. Kein Konto, keine Analyse, kein Tracking.</string>
     <string name="lock_prompt_subtitle">Deine Gegensprechanlage</string>
-    <string name="lock_forgot_body">Die PIN kann nicht wiederhergestellt werden. TalkCtrl vergisst dein Gerät und die gespeicherten Profile und schaltet die App-Sperre aus. Auf dem Gerät selbst wird nichts geändert.</string>
+    <string name="lock_forgot_body">Die PIN kann nicht wiederhergestellt werden. TalkCtrl vergisst dein Gerät und die gespeicherten Profile und schaltet die App-Sperre aus. Auf dem Gerät selbst wird nichts geändert. Wenn dein Smartphone eine Displaysperre hat, bestätigst du zuerst damit.</string>
+    <string name="lock_reset_prompt_title">App-Sperre von TalkCtrl zurücksetzen</string>
+    <string name="lock_reset_prompt_subtitle">Bestätige mit der Displaysperre deines Smartphones, dass du es bist</string>
+    <string name="lock_reset_prompt_failed">Displaysperre konnte nicht angezeigt werden</string>
 
     <!-- Tabs -->
     <string name="tab_unit">Gerät</string>
@@ -290,7 +293,7 @@
 
     <!-- Profiles and settings file -->
     <string name="group_backup">Profile und Einstellungsdatei</string>
-    <string name="backup_footer">Nur auf dem Smartphone und in der Datei, die du wählst. Die Datei enthält nie Adresse, Name oder Seriennummer deines Geräts oder die PIN der App-Sperre. Ein Import schaltet In Screenshots ausblenden oder In letzten Apps ausblenden nie aus und ändert die App-Sperre nicht. Profile werden in TalkCtrl gespeichert; nichts wird an das Gerät gesendet, bis du eins anwendest.</string>
+    <string name="backup_footer">Nur auf dem Smartphone und in der Datei, die du wählst. Die Datei enthält nie Adresse, Name oder Seriennummer deines Geräts oder die PIN der App-Sperre. Ein Import schaltet In Screenshots ausblenden oder In letzten Apps ausblenden nie aus, lässt die App-Sperre nie länger warten, bevor sie wieder fragt, und schaltet die App-Sperre nicht ein oder aus und ändert ihre PIN nicht. Profile werden in TalkCtrl gespeichert; nichts wird an das Gerät gesendet, bis du eins anwendest.</string>
     <string name="export_profiles">Profile exportieren</string>
     <string name="export_profiles_sub">Solo, Duo und Gruppe in einer Datei speichern</string>
     <string name="export_settings">Einstellungen exportieren</string>

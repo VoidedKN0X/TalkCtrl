@@ -62,7 +62,7 @@ Part of the [Ctrl series](#the-ctrl-series) by VKNXWorks.
 
 You can also load a firmware file yourself (`.bin`, `.fot` or Cardo's `.tar.gz`) and tell TalkCtrl its version.
 
-The transfer uses Qualcomm's standard GAIA upgrade over Bluetooth LE, as the Cardo app does (GAIA v1/v2 for most units, GAIA v3 for Flow Lite, chosen from the model you pick): TalkCtrl asks the unit to get ready, unpacks Cardo's `.tar.gz`, then connects, syncs (so an interrupted transfer resumes where it stopped), sends the file in acknowledged chunks, lets the unit check it, restarts it into the new image and confirms the update. The unit checks Cardo's signature and keeps its old firmware until the new one is confirmed. **This transfer is not yet tested on a real unit.** Keep the screen on (TalkCtrl does that while the transfer screen is open), the unit close and charged to at least 50 %.
+The transfer uses Qualcomm's standard GAIA upgrade over Bluetooth LE, as the Cardo app does (GAIA v1/v2 for most units, GAIA v3 for Flow Lite, chosen from the model you pick): TalkCtrl asks the unit to get ready, unpacks Cardo's `.tar.gz`, then connects, syncs (so an interrupted transfer resumes where it stopped), sends the file in acknowledged chunks, lets the unit check it, restarts it into the new image and confirms the update. The unit checks Cardo's signature and keeps its old firmware until the new one is confirmed. **This transfer is not yet tested on a real unit.** Keep the screen on (TalkCtrl does that while the transfer screen is open), the unit close and charged to at least 50 %. If Android refuses to send a packet, TalkCtrl sends it once more after half a second; if that is refused too, it drops the Bluetooth link and reconnects, and the transfer resumes where the unit says it stopped, instead of sitting at the same percentage.
 
 ## Is it safe to install?
 
@@ -105,7 +105,8 @@ Turn the app lock on under **Settings > Privacy and security > App lock**. It's 
 - **Unlock with fingerprint** (optional) only accepts strong biometrics, checked by the phone's secure hardware. The PIN is still needed after the phone restarts and at least every 72 hours.
 - **The PIN is never stored.** It's stretched with 600,000 rounds of PBKDF2 and mixed with a key held in the phone's secure hardware.
 - **Wrong PINs:** after 5 tries you wait 30 seconds, doubling up to 15 minutes. Restarting the app or the phone, or changing the clock, doesn't skip the wait.
-- **Forgot your PIN?** It can't be recovered. The lock screen offers to forget your unit and saved profiles and turn the lock off. Nothing on the unit itself is changed.
+- **Forgot your PIN?** It can't be recovered. The lock screen offers to forget your unit and saved profiles and turn the lock off. Nothing on the unit itself is changed. If your phone has a screen lock (PIN, pattern, password or a strong fingerprint), you confirm the reset with it first, so someone holding your unlocked phone can't simply reset TalkCtrl's lock; a phone without a screen lock asks only for the confirmation, as before.
+- **Importing a settings file** never turns the app lock on or off, never turns off Hide in screenshots or Hide in recent apps, and never makes the lock wait longer before it asks again (a shorter timeout in the file is used, a longer one is ignored).
 
 ## Privacy
 

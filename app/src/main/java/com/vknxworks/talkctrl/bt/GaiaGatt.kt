@@ -10,6 +10,7 @@ import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
 import android.bluetooth.BluetoothStatusCodes
 import android.content.Context
+import android.os.Handler
 import com.vknxworks.talkctrl.protocol.Caip
 import com.vknxworks.talkctrl.protocol.Gaia
 
@@ -19,7 +20,7 @@ import com.vknxworks.talkctrl.protocol.Gaia
  * characteristic. Callbacks arrive on Android's Bluetooth thread.
  */
 @SuppressLint("MissingPermission") // Used only after BLUETOOTH_CONNECT was granted; SecurityException is caught.
-class GaiaGatt(private val context: Context, private val listener: Listener) {
+class GaiaGatt(private val context: Context, private val listener: Listener, private val handler: Handler) {
 
     interface Listener {
         /** Ready to send; [mtu] is the negotiated ATT MTU. */
@@ -59,6 +60,9 @@ class GaiaGatt(private val context: Context, private val listener: Listener) {
         return true
     }
 
+    /** Retry state of the packet being written; guarded by [pending]. */
+    private val retry = WriteRetry()
+
     private fun pump() {
         val g = gatt ?: return
         val c = command ?: return
@@ -67,14 +71,33 @@ class GaiaGatt(private val context: Context, private val listener: Listener) {
             if (writing) return
             next = pending.removeFirstOrNull() ?: return
             writing = true
+            retry.newPacket()
         }
+        write(g, c, next)
+    }
+
+    /**
+     * Writes [packet]. A refused write used to drop the packet silently while the update engine kept waiting
+     * for its answer, so the transfer hung. Now the same packet is written once more after a short wait
+     * ([writing] stays set, so nothing overtakes it); if that is refused too, the link is closed and reported
+     * as lost, and FirmwareService reconnects and resumes from the unit's resume point.
+     */
+    private fun write(g: BluetoothGatt, c: BluetoothGattCharacteristic, packet: ByteArray) {
         val ok = try {
-            g.writeCharacteristic(c, next, BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT) == BluetoothStatusCodes.SUCCESS
+            g.writeCharacteristic(c, packet, BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT) == BluetoothStatusCodes.SUCCESS
         } catch (_: SecurityException) {
             false
         }
-        if (!ok) {
-            synchronized(pending) { writing = false }
+        if (ok) return
+        val action = synchronized(pending) { retry.refused() }
+        if (action == WriteRetry.Action.RETRY) {
+            handler.postDelayed({
+                // Only for the same, still open link: a close or a new connection in between drops it.
+                if (!closed && gatt === g && command === c) write(g, c, packet)
+            }, WriteRetry.DELAY_MS)
+        } else if (!closed && gatt === g) {
+            close()
+            listener.onDisconnected()
         }
     }
 
