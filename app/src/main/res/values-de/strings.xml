@@ -310,15 +310,6 @@
     <string name="import_model">Modell für Firmware-Updates</string>
     <string name="import_fm_names">Namen der UKW-Sender</string>
 
-    <!-- Diagnostics -->
-    <string name="diag_export">Diagnose exportieren</string>
-    <string name="diag_export_sub">Eine Textdatei mit dem, was TalkCtrl von deinem Gerät sieht, um zu prüfen, ob alles funktioniert</string>
-    <string name="diag_title">Diagnose exportieren</string>
-    <string name="diag_body">Die Datei enthält die Versionen von TalkCtrl und Android, das Smartphone-Modell, wie das Gerät verbunden ist, seine Firmware, Einstellungsdatensätze, Fähigkeiten, Akku, UKW-Status und die letzten Nachrichten zwischen Smartphone und Gerät (seit dem Verbinden, nur im Speicher gehalten).\n\nNicht enthalten: Name, Seriennummer und Bluetooth-Adresse des Geräts, deine Kurzwahlnummer und deine UKW-Sendernamen. Nachrichten, die sie enthalten, zeigen nur Typ und Länge.\n\nDie Datei wird dort gespeichert, wo du willst, und nirgendwohin gesendet.</string>
-    <string name="diag_save">Speicherort wählen</string>
-    <string name="diag_saved">Diagnose gespeichert</string>
-    <string name="diag_failed">Datei konnte nicht gespeichert werden</string>
-
     <!-- Low battery -->
     <string name="group_notifications">Benachrichtigungen</string>
     <string name="low_battery">Warnung bei schwachem Akku</string>

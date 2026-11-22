@@ -1,4 +1,4 @@
-package com.vknxworks.talkctrl.diag
+package com.vknxworks.talkctrl.bt
 
 /**
  * Decides when to warn about the unit's battery: once when it reaches [threshold] % or less while not charging,

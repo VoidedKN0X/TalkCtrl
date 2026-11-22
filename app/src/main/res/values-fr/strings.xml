@@ -310,15 +310,6 @@
     <string name="import_model">Modèle pour les mises à jour du firmware</string>
     <string name="import_fm_names">Noms des stations FM</string>
 
-    <!-- Diagnostics -->
-    <string name="diag_export">Exporter les diagnostics</string>
-    <string name="diag_export_sub">Un fichier texte de ce que TalkCtrl voit de votre unité, pour vérifier que tout fonctionne</string>
-    <string name="diag_title">Exporter les diagnostics</string>
-    <string name="diag_body">Le fichier indique les versions de TalkCtrl et d\'Android, le modèle du téléphone, le mode de connexion de l\'unité, son firmware, ses enregistrements de réglages, ses capacités, sa batterie, l\'état de la radio FM et les derniers messages entre le téléphone et l\'unité (depuis la connexion, gardés uniquement en mémoire).\n\nExclus : le nom, le numéro de série et l\'adresse Bluetooth de l\'unité, votre numéro abrégé et les noms de vos stations FM. Les messages qui les contiennent n\'indiquent que leur type et leur longueur.\n\nLe fichier est enregistré à l\'endroit de votre choix et n\'est jamais envoyé nulle part.</string>
-    <string name="diag_save">Choisir l\'emplacement</string>
-    <string name="diag_saved">Diagnostics enregistrés</string>
-    <string name="diag_failed">Impossible d\'enregistrer le fichier</string>
-
     <!-- Low battery -->
     <string name="group_notifications">Notifications</string>
     <string name="low_battery">Alerte de batterie faible</string>

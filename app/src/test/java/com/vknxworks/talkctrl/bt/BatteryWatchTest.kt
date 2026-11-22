@@ -1,4 +1,4 @@
-package com.vknxworks.talkctrl.diag
+package com.vknxworks.talkctrl.bt
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

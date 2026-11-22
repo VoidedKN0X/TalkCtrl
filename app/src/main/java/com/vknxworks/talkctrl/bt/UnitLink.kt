@@ -65,7 +65,6 @@ data class UnitState(
     val fmMhz: Double? = null,
     val fmPreset: Int = 0,
     val musicSharing: Int = 0,
-    val otaReady: Boolean = false,
     val unsupportedVersion: Boolean = false,
 ) {
     val connected get() = link == LinkState.CONNECTED
@@ -82,9 +81,6 @@ class UnitLink(private val context: Context) {
 
     private val _state = MutableStateFlow(UnitState())
     val state: StateFlow<UnitState> = _state.asStateFlow()
-
-    /** The last messages both ways, personal ones reduced to opcode and length (for the diagnostics export). */
-    val log = com.vknxworks.talkctrl.diag.MessageLog()
 
     /** Every message from the unit, parsed. */
     val messages = MutableSharedFlow<Caip.Message>(extraBufferCapacity = 64)
@@ -106,7 +102,6 @@ class UnitLink(private val context: Context) {
             null
         } ?: run { _state.value = UnitState(LinkState.FAILED, address); return }
         _state.value = UnitState(LinkState.CONNECTING, address, rfcomm)
-        log.reset(System.currentTimeMillis())
         job = scope.launch {
             try {
                 if (rfcomm) runRfcomm(device) else device.connectGatt(context, false, gattCallback, BluetoothDevice.TRANSPORT_LE).also { gatt = it }
@@ -152,7 +147,6 @@ class UnitLink(private val context: Context) {
     /** Queues one CAIP message. False when not connected. */
     fun send(msg: ByteArray): Boolean {
         if (gatt == null && socket == null) return false
-        log.add(System.currentTimeMillis(), outgoing = true, msg)
         val s = socket
         if (s != null) {
             scope.launch(Dispatchers.IO) {
@@ -313,7 +307,6 @@ class UnitLink(private val context: Context) {
     }
 
     private fun onRaw(d: ByteArray) {
-        log.add(System.currentTimeMillis(), outgoing = false, d)
         val m = Caip.parse(d) ?: return
         _state.update { s ->
             when (m) {
@@ -324,8 +317,7 @@ class UnitLink(private val context: Context) {
                 is Caip.Name -> s.copy(name = m.name)
                 is Caip.SpeedDial -> s.copy(speedDial = m.number)
                 is Caip.MusicSharing -> s.copy(musicSharing = m.state)
-                Caip.OtaReady -> s.copy(otaReady = true)
-                is Caip.Other -> s
+                Caip.OtaReady, is Caip.Other -> s
             }
         }
         messages.tryEmit(m)
@@ -389,7 +381,6 @@ class UnitLink(private val context: Context) {
 
     /** Asks the unit to get ready for an update and waits up to [timeoutMs] for its answer. */
     suspend fun requestOtaReady(timeoutMs: Long): Boolean {
-        _state.update { it.copy(otaReady = false) }
         if (gatt == null && socket == null) return false
         return sendAndAwait(byteArrayOf(Caip.OP_OTA_START.toByte()), timeoutMs) { messages.first { it == Caip.OtaReady } } != null
     }

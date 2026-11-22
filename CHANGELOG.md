@@ -4,6 +4,13 @@ What changed in each TalkCtrl release. Every release on the [Releases page](http
 
 To publish a new version: bump `versionCode` and `versionName` in `app/build.gradle.kts`, add a section here, and push to `main`. Pushes without a version bump only build; they don't make a release.
 
+## Unreleased
+
+### Removed
+
+- **Export diagnostics.** The "Export diagnostics" row under Unit > Maintenance is gone, with its explanation dialog and the text file it saved (versions, phone model, connection, settings records and the last messages between phone and unit). TalkCtrl also no longer keeps the in-memory list of the last 200 messages to and from the unit that the file was built from. Nothing else changes: firmware update, factory reset, forget unit, the low-battery warning and every other control work as before.
+- **Leftover log lines stripped from release builds.** The release build now also removes warning, error and other system-log calls from the code it ships (TalkCtrl itself had none), so nothing ends up in the phone's system log.
+
 ## v0.3.0 (2026-11-21)
 
 Built and checked by CI only: nothing in this release had been run on a phone when it was published.

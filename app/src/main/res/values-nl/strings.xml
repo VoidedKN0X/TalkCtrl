@@ -289,13 +289,6 @@
     <string name="import_profile_replaced">Profiel %1$s</string>
     <string name="import_model">Model voor firmware-updates</string>
     <string name="import_fm_names">FM-zendernamen</string>
-    <string name="diag_export">Diagnose exporteren</string>
-    <string name="diag_export_sub">Een tekstbestand met wat TalkCtrl van je unit ziet, om te kijken of het werkt</string>
-    <string name="diag_title">Diagnose exporteren</string>
-    <string name="diag_body">Het bestand bevat de versies van TalkCtrl en Android, het telefoonmodel, hoe de unit verbonden is, zijn firmware, instellingsrecords, mogelijkheden, batterij, FM-status en de laatste berichten tussen telefoon en unit (sinds het verbinden, alleen in het geheugen bewaard).\n\nWeggelaten: de naam, het serienummer en het Bluetooth-adres van de unit, je snelkiesnummer en je FM-zendernamen. Berichten die ze bevatten tonen alleen hun soort en lengte.\n\nHet bestand wordt bewaard waar jij kiest en nergens naartoe gestuurd.</string>
-    <string name="diag_save">Kiezen waar je bewaart</string>
-    <string name="diag_saved">Diagnose bewaard</string>
-    <string name="diag_failed">Het bestand kon niet bewaard worden</string>
     <string name="group_notifications">Meldingen</string>
     <string name="low_battery">Waarschuwing bij lage batterij</string>
     <string name="low_battery_at">Bij %1$d %%</string>

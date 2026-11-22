@@ -36,7 +36,7 @@ class AppContainer(val context: Context) {
     /** The app lock's PIN and fingerprint key (the shared Ctrl series lock). */
     val vault = LockVault(context, "talkctrl")
 
-    private val batteryWatch = com.vknxworks.talkctrl.diag.BatteryWatch()
+    private val batteryWatch = com.vknxworks.talkctrl.bt.BatteryWatch()
 
     /**
      * The low-battery warning: watches the battery level the unit reports while TalkCtrl is connected to it
